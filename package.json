@@ -1,0 +1,17 @@
+{
+  "name": "tg4travel-mail-bridge",
+  "version": "1.0.0",
+  "description": "HTTP -> SMTP bridge for TG4Travel",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14"
+  }
+}
