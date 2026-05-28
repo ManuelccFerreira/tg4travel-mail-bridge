@@ -8,9 +8,9 @@ const {
   SMTP_HOST = 'mail.tg4travel.com',
   SMTP_PORT = '587',
   SMTP_SECURE = 'false',
-  SMTP_USER,
-  SMTP_PASS,
-  SMTP_FROM,
+  SMTP_USER = info@tg4travel.com
+  SMTP_PASS = rN(T;1~z2c&9
+  SMTP_FROM, = TG4Travel <info@tg4travel.com>
   BRIDGE_TOKEN,
   PORT = '10000',
 } = process.env;
