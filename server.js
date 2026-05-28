@@ -25,15 +25,34 @@ const transporter = nodemailer.createTransport({
   port: Number(SMTP_PORT),
   secure: SMTP_SECURE === 'true',
   auth: { user: SMTP_USER, pass: SMTP_PASS },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
 });
 
 app.get('/', (_req, res) => res.json({ ok: true, service: 'tg4travel-mail-bridge' }));
 
-app.get('/health', async (_req, res) => {
+// Fast health check (does NOT touch SMTP)
+app.get('/health', (_req, res) => res.json({ ok: true }));
+
+// SMTP diagnostic with hard 8s timeout
+app.get('/health/smtp', async (_req, res) => {
+  let done = false;
+  const t = setTimeout(() => {
+    if (done) return;
+    done = true;
+    res.status(504).json({ ok: false, error: 'verify timeout 8s' });
+  }, 8000);
   try {
     await transporter.verify();
+    if (done) return;
+    done = true;
+    clearTimeout(t);
     res.json({ ok: true });
   } catch (e) {
+    if (done) return;
+    done = true;
+    clearTimeout(t);
     res.status(500).json({ ok: false, error: String(e?.message || e) });
   }
 });
@@ -51,16 +70,21 @@ app.post('/send', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'missing to/subject/body' });
     }
 
-    // attachments: [{ filename, url }] or [{ filename, content (base64) }]
     const mailAttachments = [];
     if (Array.isArray(attachments)) {
       for (const a of attachments) {
         if (!a) continue;
         if (a.url) {
-          const r = await fetch(a.url);
-          if (!r.ok) throw new Error(`attachment fetch ${a.url}: ${r.status}`);
-          const buf = Buffer.from(await r.arrayBuffer());
-          mailAttachments.push({ filename: a.filename || 'attachment.pdf', content: buf });
+          const ac = new AbortController();
+          const at = setTimeout(() => ac.abort(), 15000);
+          try {
+            const r = await fetch(a.url, { signal: ac.signal });
+            if (!r.ok) throw new Error(`attachment fetch ${a.url}: ${r.status}`);
+            const buf = Buffer.from(await r.arrayBuffer());
+            mailAttachments.push({ filename: a.filename || 'attachment.pdf', content: buf });
+          } finally {
+            clearTimeout(at);
+          }
         } else if (a.content) {
           mailAttachments.push({
             filename: a.filename || 'attachment.bin',
@@ -85,4 +109,5 @@ app.post('/send', async (req, res) => {
 
 app.listen(Number(PORT), () => {
   console.log(`bridge listening on ${PORT}`);
-});
+  console.log(`SMTP config: host=${SMTP_HOST} port=${SMTP_PORT} secure=${SMTP_SECURE} user=${SMTP_USER}`);
+  });
