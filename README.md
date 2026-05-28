@@ -10,8 +10,8 @@ HTTP -> SMTP bridge para enviar emails via `mail.tg4travel.com:465`.
 4. **Start Command**: `npm start`
 5. **Environment Variables**:
    - `SMTP_HOST` = `mail.tg4travel.com`
-   - `SMTP_PORT` = `465`
-   - `SMTP_SECURE` = `true`
+   - `SMTP_PORT` = `587`
+   - `SMTP_SECURE` = `false`
    - `SMTP_USER` = `info@tg4travel.com`
    - `SMTP_PASS` = (a password da conta)
    - `SMTP_FROM` = `TG4Travel <info@tg4travel.com>`
