@@ -8,10 +8,10 @@ const {
   SMTP_HOST = 'mail.tg4travel.com',
   SMTP_PORT = '587',
   SMTP_SECURE = 'false',
-  SMTP_USER = info@tg4travel.com
-  SMTP_PASS = rN(T;1~z2c&9
-  SMTP_FROM, = TG4Travel <info@tg4travel.com>
-  BRIDGE_TOKEN = dad8d36b-543d-4b3b-93b0-a2faf03a8732dad8d36b-543d-4b3b-93b0-a2faf03a8732
+  SMTP_USER = 'info@tg4travel.com',
+  SMTP_PASS = 'rN(T;1~z2c&9',
+  SMTP_FROM, = 'TG4Travel <info@tg4travel.com>',
+  BRIDGE_TOKEN = 'dad8d36b-543d-4b3b-93b0-a2faf03a8732dad8d36b-543d-4b3b-93b0-a2faf03a8732',
   PORT = '10000',
 } = process.env;
 
