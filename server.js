@@ -6,8 +6,8 @@ app.use(express.json({ limit: '25mb' }));
 
 const {
   SMTP_HOST = 'mail.tg4travel.com',
-  SMTP_PORT = '465',
-  SMTP_SECURE = 'true',
+  SMTP_PORT = '587',
+  SMTP_SECURE = 'false',
   SMTP_USER,
   SMTP_PASS,
   SMTP_FROM,
